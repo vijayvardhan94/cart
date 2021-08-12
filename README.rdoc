@@ -1,3 +1,3 @@
-== README
+== Depot-Cart
 
 A shopoping cart application in Ruby on Rails - with store front, product catalog and cart functionalities.
