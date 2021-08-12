@@ -3,6 +3,12 @@ require 'test_helper'
 class ProductsControllerTest < ActionController::TestCase
   setup do
     @product = products(:one)
+    @update = {
+      title: 'Lorem Product',
+      description: 'Wibbles are fun',
+      image_url: 'lorem.jpg',
+      price: 19.95
+    }
   end
 
   test "should get index" do
@@ -18,7 +24,7 @@ class ProductsControllerTest < ActionController::TestCase
 
   test "should create product" do
     assert_difference('Product.count') do
-      post :create, product: { description: @product.description, image_url: @product.image_url, price: @product.price, title: @product.title }
+      post :create, product: @update#{ description: @product.description, image_url: @product.image_url, price: @product.price, title: @product.title }
     end
 
     assert_redirected_to product_path(assigns(:product))
@@ -35,7 +41,7 @@ class ProductsControllerTest < ActionController::TestCase
   end
 
   test "should update product" do
-    patch :update, id: @product, product: { description: @product.description, image_url: @product.image_url, price: @product.price, title: @product.title }
+    patch :update, id: @product, product: @update#{ description: @product.description, image_url: @product.image_url, price: @product.price, title: @product.title }
     assert_redirected_to product_path(assigns(:product))
   end
 
@@ -45,5 +51,14 @@ class ProductsControllerTest < ActionController::TestCase
     end
 
     assert_redirected_to products_path
+  end
+
+  test "should verify products page" do
+    get :products
+    assert_response :success
+    assert_select '#columns #side a', minimum: 4
+    assert_select '#main .entry', 3
+    assert_select 'h3', 'Programming Ruby 1.9'
+    assert_select '.price', /\$[,\d]+\.\d\d/
   end
 end
